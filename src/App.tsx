@@ -681,10 +681,10 @@ export default function App() {
       {/* Header controls & titles */}
       <header className="relative pt-16 pb-8 z-10 shrink-0">
         {/* Desk Selector Dropdown (Top Left) */}
-        {desksMetaList.length > 0 && (
+        {isAdmin && desksMetaList.length > 0 && (
           <div className="absolute top-6 left-6 z-20 flex items-center gap-1.5 bg-white/90 hover:bg-white px-4 py-2.5 rounded-full shadow-md border border-gray-200 transition-all">
             <span className="text-xs font-bold text-gray-500 whitespace-nowrap">
-              <i className="fas fa-desktop text-blue-500 mr-1"></i> 도움데스크:
+              <i className="fas fa-desktop text-blue-500 mr-1"></i> 사이트 바로가기:
             </span>
             <select
               value={currentSiteId}
