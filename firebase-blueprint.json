@@ -1,0 +1,109 @@
+{
+  "entities": {
+    "AppState": {
+      "title": "SchoolSettings",
+      "description": "Global settings and content for the School Work Help Desk Manager",
+      "type": "object",
+      "properties": {
+        "pageTitle": {
+          "type": "string",
+          "description": "Title displayed on the header"
+        },
+        "pageDescription": {
+          "type": "string",
+          "description": "Subtitle description of the service"
+        },
+        "copyright": {
+          "type": "string",
+          "description": "Copyright notice shown in footer"
+        },
+        "contactEmail": {
+          "type": "string",
+          "description": "Optional contact email address"
+        },
+        "masterPassword": {
+          "type": "string",
+          "description": "Optional administrative passkey for all password gates"
+        },
+        "columns": {
+          "type": "integer",
+          "description": "Number of visual grid columns"
+        },
+        "rows": {
+          "type": "integer",
+          "description": "Number of visual grid rows"
+        },
+        "quickLinkPosition": {
+          "type": "string",
+          "enum": ["top", "bottom"],
+          "description": "Placement of the external links bar"
+        },
+        "quickLinkBarColor": {
+          "type": "string",
+          "description": "Theme color key for the quicklinks container background"
+        },
+        "quickLinks": {
+          "type": "array",
+          "description": "External links to key platforms"
+        },
+        "categories": {
+          "type": "array",
+          "description": "Dashboard categories, board posts, group folder lists, and checkboxes"
+        }
+      },
+      "required": ["pageTitle", "pageDescription", "copyright", "columns", "rows", "quickLinks", "categories"]
+    },
+    "DeskMeta": {
+      "title": "DeskMeta",
+      "description": "Metadata for a custom site desk manager",
+      "type": "object",
+      "properties": {
+        "siteID": { "type": "string" },
+        "siteName": { "type": "string" },
+        "adminId": { "type": "string" }
+      },
+      "required": ["siteID", "siteName", "adminId"]
+    },
+    "DeskCredential": {
+      "title": "DeskCredential",
+      "description": "Administrative credential for a site desk manager",
+      "type": "object",
+      "properties": {
+        "siteID": { "type": "string" },
+        "adminId": { "type": "string" },
+        "adminPassword": { "type": "string" }
+      },
+      "required": ["siteID", "adminId", "adminPassword"]
+    }
+  },
+  "firestore": {
+    "school_settings/{siteID}": {
+      "schema": "AppState",
+      "description": "The settings and data tree containing the entire state of a specific school dashboard desk."
+    },
+    "school_settings/admin_desks": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "desks": {
+            "type": "array",
+            "items": { "$ref": "#/entities/DeskMeta" }
+          }
+        }
+      },
+      "description": "The global list of registered school desks."
+    },
+    "school_settings/admin_credentials": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "credentials": {
+            "type": "array",
+            "items": { "$ref": "#/entities/DeskCredential" }
+          }
+        }
+      },
+      "description": "The global list of administrative credentials for each registered school desk. Read/write is strictly controlled."
+    }
+  }
+}

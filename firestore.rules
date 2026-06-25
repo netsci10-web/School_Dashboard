@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global safety net: default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Identifies standard authenticated Super/Global administrators
+    function isSuperAdmin() {
+      return isSignedIn() && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    // School Settings Collection Rules
+    match /school_settings/{settingId} {
+      // Anyone can read any setting document (including desk metadata, categories, credentials)
+      allow read: if true;
+
+      // Writes to global admin configurations are restricted to Super Admin.
+      // Other site desk documents can be written by anyone.
+      allow write: if (settingId == 'admin_desks' || settingId == 'admin_credentials') ? isSuperAdmin() : true;
+    }
+  }
+}

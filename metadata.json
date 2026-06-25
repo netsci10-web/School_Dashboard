@@ -1,0 +1,6 @@
+{
+  "name": "학교 업무 도움 데스크 매니저",
+  "description": "학교 교직원을 위한 종합 업무 대시보드 및 지원 관리 매니저 (게시판, 할일 관리, 링크 관리)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
