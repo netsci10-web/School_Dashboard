@@ -863,6 +863,11 @@ export default function App() {
           showToast={showToast}
           onRefreshDesks={() => {}}
           onLogout={handleLogout}
+          onSelectSite={(siteId) => {
+            setCurrentSiteId(siteId);
+            const selectedDesk = desksMetaList.find(d => d.siteID === siteId);
+            showToast(`'${selectedDesk?.siteName || siteId}' 도움데스크로 이동했습니다.`, "success");
+          }}
         />
       )}
 

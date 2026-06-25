@@ -10,6 +10,7 @@ interface SuperAdminModalProps {
   showToast: (msg: string, type: "success" | "error") => void;
   onRefreshDesks: () => void;
   onLogout?: () => void;
+  onSelectSite?: (siteID: string) => void;
 }
 
 export default function SuperAdminModal({
@@ -19,6 +20,7 @@ export default function SuperAdminModal({
   showToast,
   onRefreshDesks,
   onLogout,
+  onSelectSite,
 }: SuperAdminModalProps) {
   const [desks, setDesks] = useState<DeskMeta[]>([]);
   const [loading, setLoading] = useState(false);
@@ -432,7 +434,23 @@ export default function SuperAdminModal({
                       {desks.map((d, idx) => (
                         <tr key={d.siteID} className="hover:bg-gray-50/50">
                           <td className="px-4 py-3">
-                            <div className="font-bold text-gray-800">{d.siteName}</div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-bold text-gray-800">{d.siteName}</span>
+                              {onSelectSite && (
+                                <button
+                                  onClick={() => {
+                                    onSelectSite(d.siteID);
+                                    onClose();
+                                  }}
+                                  className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 px-1.5 py-0.5 rounded transition-all cursor-pointer border border-indigo-200"
+                                  type="button"
+                                  title="바로가기"
+                                >
+                                  <i className="fas fa-external-link-alt text-[9px]"></i>
+                                  바로가기
+                                </button>
+                              )}
+                            </div>
                             <div className="text-[10px] text-gray-400 font-mono mt-0.5">{d.siteID}</div>
                           </td>
                           <td className="px-4 py-3 font-medium text-gray-600">{d.adminId}</td>
