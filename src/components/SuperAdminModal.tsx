@@ -35,6 +35,16 @@ export default function SuperAdminModal({
 
   const isEditing = editingIndex !== null;
 
+  const getSiteUrl = (siteID: string) => {
+    const url = new URL(window.location.href);
+    if (siteID === "main") {
+      url.searchParams.delete("site");
+    } else {
+      url.searchParams.set("site", siteID);
+    }
+    return url.toString();
+  };
+
   // Load all desks with credentials when modal opens
   useEffect(() => {
     if (!isOpen) return;
@@ -434,24 +444,24 @@ export default function SuperAdminModal({
                       {desks.map((d, idx) => (
                         <tr key={d.siteID} className="hover:bg-gray-50/50">
                           <td className="px-4 py-3">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-bold text-gray-800">{d.siteName}</span>
-                              {onSelectSite && (
-                                <button
-                                  onClick={() => {
-                                    onSelectSite(d.siteID);
+                            <div className="font-bold text-gray-800">{d.siteName}</div>
+                            <div className="text-[10px] text-gray-400 font-mono mt-0.5">ID: {d.siteID}</div>
+                            <div className="mt-1.5 break-all text-[11px] font-mono">
+                              <a
+                                href={getSiteUrl(d.siteID)}
+                                onClick={(e) => {
+                                  if (!e.metaKey && !e.ctrlKey) {
+                                    e.preventDefault();
+                                    onSelectSite?.(d.siteID);
                                     onClose();
-                                  }}
-                                  className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 px-1.5 py-0.5 rounded transition-all cursor-pointer border border-indigo-200"
-                                  type="button"
-                                  title="바로가기"
-                                >
-                                  <i className="fas fa-external-link-alt text-[9px]"></i>
-                                  바로가기
-                                </button>
-                              )}
+                                  }
+                                }}
+                                className="text-indigo-600 hover:text-indigo-800 hover:underline inline-flex items-center gap-1 font-medium"
+                              >
+                                <i className="fas fa-link text-[10px]"></i>
+                                {getSiteUrl(d.siteID)}
+                              </a>
                             </div>
-                            <div className="text-[10px] text-gray-400 font-mono mt-0.5">{d.siteID}</div>
                           </td>
                           <td className="px-4 py-3 font-medium text-gray-600">{d.adminId}</td>
                           <td className="px-4 py-3 text-gray-400 font-mono">

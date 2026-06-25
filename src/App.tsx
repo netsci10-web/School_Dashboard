@@ -97,7 +97,36 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Multi-site administrative states
-  const [currentSiteId, setCurrentSiteId] = useState("main");
+  const [currentSiteId, setCurrentSiteId] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("site") || "main";
+  });
+
+  // Keep the browser URL updated when currentSiteId changes
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("site") !== currentSiteId) {
+      if (currentSiteId === "main") {
+        params.delete("site");
+      } else {
+        params.set("site", currentSiteId);
+      }
+      const newSearch = params.toString();
+      const newUrl = `${window.location.pathname}${newSearch ? `?${newSearch}` : ""}${window.location.hash}`;
+      window.history.replaceState(null, "", newUrl);
+    }
+  }, [currentSiteId]);
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      setCurrentSiteId(params.get("site") || "main");
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   const [desksMetaList, setDesksMetaList] = useState<DeskMeta[]>([]);
   const [loggedSiteAdmin, setLoggedSiteAdmin] = useState<{ siteID: string; siteName: string; adminId: string } | null>(null);
 
